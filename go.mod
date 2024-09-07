@@ -15,6 +15,7 @@ require (
 	connectrpc.com/connect v1.16.2
 	gitea.com/go-chi/binding v0.0.0-20240430071103-39a851e106ed
 	gitea.com/lunny/levelqueue v0.4.2-0.20230414023320-3c0159fe0fe4
+	github.com/42wim/httpsig v1.2.2
 	github.com/42wim/sshsig v0.0.0-20211121163825-841cf5bbc121
 	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358
 	github.com/ProtonMail/go-crypto v1.0.0
@@ -41,7 +42,6 @@ require (
 	github.com/go-chi/cors v1.2.1
 	github.com/go-co-op/gocron v1.37.0
 	github.com/go-enry/go-enry/v2 v2.8.9
-	github.com/go-fed/httpsig v1.1.1-0.20201223112313-55836744818e
 	github.com/go-git/go-git/v5 v5.11.0
 	github.com/go-ldap/ldap/v3 v3.4.6
 	github.com/go-sql-driver/mysql v1.8.1
@@ -177,6 +177,7 @@ require (
 	github.com/go-enry/go-oniguruma v1.2.1 // indirect
 	github.com/go-faster/city v1.0.1 // indirect
 	github.com/go-faster/errors v0.7.1 // indirect
+	github.com/go-fed/httpsig v1.1.1-0.20201223112313-55836744818e // indirect
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.5.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
