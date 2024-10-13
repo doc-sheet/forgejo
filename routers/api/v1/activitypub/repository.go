@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"code.gitea.io/gitea/modules/activitypub"
 	"code.gitea.io/gitea/modules/forgefed"
 	"code.gitea.io/gitea/modules/log"
 	"code.gitea.io/gitea/modules/setting"
@@ -16,6 +17,7 @@ import (
 	"code.gitea.io/gitea/services/federation"
 
 	ap "github.com/go-ap/activitypub"
+	"github.com/go-ap/jsonld"
 )
 
 // Repository function returns the Repository actor for a repo
@@ -44,7 +46,30 @@ func Repository(ctx *context.APIContext) {
 		ctx.Error(http.StatusInternalServerError, "Set Name", err)
 		return
 	}
-	response(ctx, repo)
+
+	repo.PublicKey.ID = ap.IRI(link + "#main-key")
+	repo.PublicKey.Owner = ap.IRI(link)
+
+	publicKeyPem, err := activitypub.GetRepoPublicKey(ctx, ctx.Repo.Repository)
+	if err != nil {
+		ctx.ServerError("GetPublicKey", err)
+		return
+	}
+	repo.PublicKey.PublicKeyPem = publicKeyPem
+
+	binary, err := jsonld.WithContext(
+		jsonld.IRI(ap.ActivityBaseURI),
+		jsonld.IRI(ap.SecurityContextURI),
+	).Marshal(repo)
+	if err != nil {
+		ctx.ServerError("MarshalJSON", err)
+		return
+	}
+	ctx.Resp.Header().Add("Content-Type", activitypub.ActivityStreamsContentType)
+	ctx.Resp.WriteHeader(http.StatusOK)
+	if _, err = ctx.Resp.Write(binary); err != nil {
+		log.Error("write to resp err: %v", err)
+	}
 }
 
 // PersonInbox function handles the incoming data for a repository inbox
