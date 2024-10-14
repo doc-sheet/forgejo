@@ -1,4 +1,4 @@
-// Copyright 2022 The Gitea Authors. All rights reserved.
+// Copyright 2024 The Forgejo Authors
 // SPDX-License-Identifier: MIT
 
 package activitypub
