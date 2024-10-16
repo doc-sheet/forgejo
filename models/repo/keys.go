@@ -16,7 +16,7 @@ func (repo *Repository) SetRepoActivityPubPrivPem(ctx context.Context, pub, priv
 		RepoActivityPubPubPem:  pub,
 	})
 
-	return
+	return err
 }
 
 // GetRepoActivityPubPrivPem function returns a repo's private and public keys
