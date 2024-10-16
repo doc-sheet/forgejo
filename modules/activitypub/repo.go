@@ -18,7 +18,7 @@ func GetRepoKeyPair(ctx context.Context, repo *repo_model.Repository) (string, s
 		return "", "", err
 	}
 
-	if pub == nil || priv == nil {
+	if pub == "" || priv == "" {
 		priv, pub, err := util.GenerateKeyPair(rsaBits)
 
 		if err != nil {
@@ -30,7 +30,7 @@ func GetRepoKeyPair(ctx context.Context, repo *repo_model.Repository) (string, s
 		return pub, priv, err
 	}
 
-	return *pub, *priv, err
+	return pub, priv, err
 }
 
 // GetRepoPublicKey function returns a repo's public key

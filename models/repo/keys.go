@@ -12,26 +12,26 @@ import (
 // SetRepoActivityPubPrivPem function sets a repo's private and public keys
 func (repo *Repository) SetRepoActivityPubPrivPem(ctx context.Context, pub, priv string) (err error) {
 	_, err = db.GetEngine(ctx).ID(repo.ID).Update(&Repository{
-		RepoActivityPubPrivPem: &priv,
-		RepoActivityPubPubPem:  &pub,
+		RepoActivityPubPrivPem: priv,
+		RepoActivityPubPubPem:  pub,
 	})
 
 	return
 }
 
 // GetRepoActivityPubPrivPem function returns a repo's private and public keys
-func (repo *Repository) GetRepoActivityPubPrivPem(ctx context.Context) (*string, *string, error) {
+func (repo *Repository) GetRepoActivityPubPrivPem(ctx context.Context) (string, string, error) {
 	type Keys struct {
 		RepoActivityPubPrivPem string
 		RepoActivityPubPubPem  string
 	}
 
 	var keys Keys
-	has, err := db.GetEngine(ctx).Table("repository").Where("`repository`.id", repo.ID).Get(&keys)
+	_, err := db.GetEngine(ctx).Table("repository").Where("`repository`.id = ?", repo.ID).Get(&keys)
 
-	if err != nil || !has {
-		return nil, nil, err
+	if err != nil {
+		return "", "", err
 	}
 
-	return &keys.RepoActivityPubPrivPem, &keys.RepoActivityPubPubPem, err
+	return keys.RepoActivityPubPubPem, keys.RepoActivityPubPrivPem, err
 }
