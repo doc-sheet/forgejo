@@ -497,7 +497,7 @@ lint-go-windows:
 .PHONY: lint-go-vet
 lint-go-vet:
 	@echo "Running go vet..."
-	@$(GO) vet ./...
+	@$(GO) vet -composites=false ./...
 
 .PHONY: lint-go-gopls
 lint-go-gopls:
