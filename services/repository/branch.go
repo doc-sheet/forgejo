@@ -26,6 +26,7 @@ import (
 	"code.gitea.io/gitea/modules/timeutil"
 	webhook_module "code.gitea.io/gitea/modules/webhook"
 	notify_service "code.gitea.io/gitea/services/notify"
+	pull_service "code.gitea.io/gitea/services/pull"
 	files_service "code.gitea.io/gitea/services/repository/files"
 
 	"xorm.io/builder"
@@ -473,6 +474,35 @@ func DeleteBranch(ctx context.Context, doer *user_model.User, repo *repo_model.R
 	}
 
 	return nil
+}
+
+func DeleteBranchIfUnused(ctx context.Context, pr *issues_model.PullRequest, repo *git.Repository, doer *user_model.User) (bool, error) {
+	// Don't cleanup when there are other PR's that use this branch as head branch.
+	exist, err := issues_model.HasUnmergedPullRequestsByHeadInfo(ctx, pr.HeadRepoID, pr.HeadBranch)
+	if err != nil {
+		log.Error("HasUnmergedPullRequestsByHeadInfo", err)
+		return false, err
+	}
+	if exist {
+		log.Info("%-v was scheduled to automerge with branch deletion but branch is still used", pr)
+		return false, nil
+	}
+
+	if err := pull_service.RetargetChildrenOnMerge(ctx, doer, pr); err != nil {
+		log.Error("RetargetChildrenOnMerge", err)
+		return false, err
+	}
+
+	if err := DeleteBranch(ctx, doer, pr.HeadRepo, repo, pr.HeadBranch); err != nil {
+		log.Error("DeleteBranch: %v", err)
+		return false, err
+	}
+
+	if err := issues_model.AddDeletePRBranchComment(ctx, doer, pr.BaseRepo, pr.Issue.ID, pr.HeadBranch); err != nil {
+		// Do not fail here as branch has already been deleted
+		log.Error("AddDeletePRBranchComment: %v", err)
+	}
+	return true, err
 }
 
 type BranchSyncOptions struct {

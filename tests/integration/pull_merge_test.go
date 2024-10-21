@@ -880,12 +880,12 @@ func TestPullAutoMergeAfterCommitStatusSucceed(t *testing.T) {
 		session.MakeRequest(t, req, http.StatusSeeOther)
 
 		// first time insert automerge record, return true
-		scheduled, err := automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test")
+		scheduled, err := automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test", true)
 		require.NoError(t, err)
 		assert.True(t, scheduled)
 
 		// second time insert automerge record, return false because it does exist
-		scheduled, err = automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test")
+		scheduled, err = automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test", true)
 		require.Error(t, err)
 		assert.False(t, scheduled)
 
@@ -964,12 +964,12 @@ func TestPullAutoMergeAfterCommitStatusSucceedAndApproval(t *testing.T) {
 		session.MakeRequest(t, req, http.StatusSeeOther)
 
 		// first time insert automerge record, return true
-		scheduled, err := automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test")
+		scheduled, err := automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test", true)
 		require.NoError(t, err)
 		assert.True(t, scheduled)
 
 		// second time insert automerge record, return false because it does exist
-		scheduled, err = automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test")
+		scheduled, err = automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test", true)
 		require.Error(t, err)
 		assert.False(t, scheduled)
 
@@ -1093,12 +1093,12 @@ func TestPullAutoMergeAfterCommitStatusSucceedAndApprovalForAgitFlow(t *testing.
 
 		user1 := unittest.AssertExistsAndLoadBean(t, &user_model.User{ID: 1})
 		// first time insert automerge record, return true
-		scheduled, err := automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test")
+		scheduled, err := automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test", true)
 		require.NoError(t, err)
 		assert.True(t, scheduled)
 
 		// second time insert automerge record, return false because it does exist
-		scheduled, err = automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test")
+		scheduled, err = automerge.ScheduleAutoMerge(db.DefaultContext, user1, pr, repo_model.MergeStyleMerge, "auto merge test", true)
 		require.Error(t, err)
 		assert.False(t, scheduled)
 
