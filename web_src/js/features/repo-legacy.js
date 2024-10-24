@@ -416,7 +416,10 @@ async function onEditContent(event) {
         context: editContentZone.getAttribute('data-context'),
         content_version: editContentZone.getAttribute('data-content-version'),
       });
-      for (const fileInput of dropzoneInst?.element.querySelectorAll('.files [name=files]')) params.append('files[]', fileInput.value);
+      const files = dropzoneInst?.element?.querySelectorAll('.files [name=files]') ?? [];
+      for (const fileInput of files) {
+        params.append('files[]', fileInput.value);
+      }
 
       const response = await POST(editContentZone.getAttribute('data-update-url'), {data: params});
       const data = await response.json();

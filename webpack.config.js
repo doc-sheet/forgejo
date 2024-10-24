@@ -6,7 +6,7 @@ import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 import {VueLoaderPlugin} from 'vue-loader';
 import EsBuildLoader from 'esbuild-loader';
 import {parse, dirname} from 'node:path';
-import webpack from 'webpack';
+import webpack from 'webpack'; // eslint-disable-line import-x/no-named-as-default
 import {fileURLToPath} from 'node:url';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {env} from 'node:process';
